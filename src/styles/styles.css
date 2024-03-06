@@ -1,0 +1,66 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.main-content {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+
+  .title {
+    align-items: end;
+    font-size: 1rem;
+  }
+
+  .carousel-container {
+    display: grid;
+    grid-template-columns: min-content auto min-content;
+    align-self: baseline;
+
+    .image-list-container {
+      overflow-x: hidden;
+      width: 60vw;
+
+      #images-list-content {
+        display: flex;
+        transition: transform 0.8s ease;
+
+        img {
+          width: 20vw;
+          height: 20vw;
+          max-width: 100%;
+        }
+
+        .img--selected {
+          border: 1px solid white;
+        }
+      }
+    }
+
+    .left-button {
+      background-color: white;
+      color: black;
+      transform: scaleX(-1);
+      z-index: 1;
+      height: 50%;
+      align-self: center;
+      z-index: 500;
+    }
+
+    .right-button {
+      background-color: white;
+      color: black;
+      z-index: 1;
+      height: 50%;
+      align-self: center;
+    }
+  }
+}
+
+
+
+

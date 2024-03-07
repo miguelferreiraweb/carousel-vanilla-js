@@ -3,18 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Miguel Ferreira">
   <title>Carousel in Vanilla JS</title>
   <link rel="stylesheet" href="./styles/styles.css">
 </head>
 <body>
   <main class="main-content">
-    <div class="main-content title">Multiple Slides</div>
+    <div class="main-content title" id="selected-img"></div>
     <section class="carousel-container">
       <button class="left-button">&#x2794;</button>
       <div class="image-list-container">
         <div id="images-list-content"></div>
       </div>
       <button class="right-button">&#x2794;</button>
+      <p class="pages-container" id="pages-list-container"></p>
     </section>
   </main>
   <script src="./utils/utils.js"></script>

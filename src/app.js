@@ -1,7 +1,8 @@
-const IMAGE_DEFAULT_VW = 20;
-const IMAGE_MARGIN_DEFAULT = 4; // 2vw * 2(margin-left and margin-right) = 4vw
+const IMAGE_DEFAULT_SIZE = 20; // ex: width: 20vw
+const IMAGE_MARGIN_DEFAULT = 2; // ex: margin: 0 2vw
 const ITEMS_PER_PAGE = 3;
-const PAGE_OFFSET = (IMAGE_DEFAULT_VW * ITEMS_PER_PAGE) + (IMAGE_MARGIN_DEFAULT * ITEMS_PER_PAGE); // 72vw
+const UNIT_DEFAULT = 'vw';
+const PAGE_OFFSET = (IMAGE_DEFAULT_SIZE * ITEMS_PER_PAGE) + ((IMAGE_MARGIN_DEFAULT * 2 ) * ITEMS_PER_PAGE); // total = 72vw
 const TOTAL_PAGES = 4;
 const SWIPE_DISTANCE_X_DEFAULT = 20;
 
@@ -19,6 +20,19 @@ const rightButton = document.querySelector('.right-button');
 const imagesListDiv = document.getElementById('images-list-content');
 const selectedImgDiv = document.getElementById('selected-img');
 const pagesListContainer = document.getElementById('pages-list-container');
+
+// Sets the configurable styles for container and slider images.
+const applySliderConfigurableStyles = () =>{
+  const imageListContainerDiv = document.querySelector('.image-list-container');
+  const sliderImages = document.querySelectorAll('.slider-img');
+
+  imageListContainerDiv.style.width = `${PAGE_OFFSET}${UNIT_DEFAULT}`;
+  sliderImages.forEach((imgElement) => {
+    imgElement.style.width = `${IMAGE_DEFAULT_SIZE}${UNIT_DEFAULT}`;
+    imgElement.style.height = `${IMAGE_DEFAULT_SIZE}${UNIT_DEFAULT}`;
+    imgElement.style.margin = `0 ${IMAGE_MARGIN_DEFAULT}${UNIT_DEFAULT}`;
+  });
+}
 
 const render = async () => {
   await getCarouselItems();
@@ -96,15 +110,15 @@ const getCarouselItems = async () => {
 const updateSliderState = (updatedXValue, updatedPageIndex) => {
   xValue = updatedXValue;
   pageIndex = updatedPageIndex;
-  imagesListDiv.style.transform = `translateX(${xValue}vw)`;
+  imagesListDiv.style.transform = `translateX(${xValue}${UNIT_DEFAULT})`;
   selectedImgDiv.innerHTML = '';
   selectedImgIndex = null;
 }
 
 const updateDirectionButtonsState = () => {
   // toggle js function -> adds or removes class based on provided condition.
-  leftButton.classList.toggle('disabled', pageIndex === 0);
-  rightButton.classList.toggle('disabled', pageIndex === TOTAL_PAGES - 1);
+  leftButton.classList.toggle('disabled-button', pageIndex === 0);
+  rightButton.classList.toggle('disabled-button', pageIndex === TOTAL_PAGES - 1);
 }
 
 const handleImageClick = (updatedSelectedImgIndex) => {
@@ -135,10 +149,12 @@ const renderCarouselImagesList = () => {
       {
         src: `./resources/images/${item.file}.jpg`,
         alt: `${item.name} Image`,
-        className: index === selectedImgIndex ? 'img--selected' : '',
+        className: index === selectedImgIndex ? 'slider-img selected-img' : 'slider-img',
         onclick: () => reRender(render, ()=> handleImageClick(index))
       })
   )});
+
+  applySliderConfigurableStyles();
 }
 
 const renderPagesCircleList = () => {
@@ -148,7 +164,7 @@ const renderPagesCircleList = () => {
     pagesListContainer.appendChild(
       Object.assign(document.createElement('button'),
       {
-        className: pageIndex === i ? 'circle selected' : 'circle',
+        className: pageIndex === i ? 'circle selected-circle' : 'circle',
         onclick: () => reRender(render, ()=> updateSliderState(-((i) * PAGE_OFFSET), i))
       })
     )

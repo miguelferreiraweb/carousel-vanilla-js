@@ -81,6 +81,7 @@ html, body {
       margin-left: 5px;
       border: unset;
       cursor: pointer;
+      transform: scale(0.8);
     }
 
     .selected-circle {

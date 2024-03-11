@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  pull_request:
+    types: [reopened, opened, synchronize, edited]
+  push:
+    branches:
+      - main
+
+env:
+  CAROUSEL_VANILLA_JS_VERCEL_TOKEN: ${{ secrets.CAROUSEL_VANILLA_JS_VERCEL_TOKEN }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Deploy to Vercel
+      run: |
+        npm i --global vercel@latest
+        vercel pull --yes --environment=production --token=${{ env.CAROUSEL_VANILLA_JS_VERCEL_TOKEN }}
+        vercel build --prod --token=${{ env.CAROUSEL_VANILLA_JS_VERCEL_TOKEN }}
+        vercel deploy --prebuilt --prod --token=${{ env.CAROUSEL_VANILLA_JS_VERCEL_TOKEN }}
+      shell: bash

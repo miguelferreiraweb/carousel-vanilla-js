@@ -18,4 +18,4 @@ can provide you with live page reload support (ex: [Live Server](https://marketp
 
 ## Screenshots Preview
 
-<img src="/src/resources/screenshots/images_carousel.png" width="50%" height="50%" />
+<img src="/src/resources/screenshots/images_carousel.png" width="70%" height="70%" />

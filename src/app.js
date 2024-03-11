@@ -154,7 +154,8 @@ const renderCarouselImagesList = () => {
         src: !LOAD_IMAGES_FROM_URL ? `./resources/images/${item.file}.jpg` : item.url,
         alt: `${item.name} Image`,
         className: index === selectedImgIndex ? 'slider-img selected-img' : 'slider-img',
-        onclick: () => reRender(()=> handleImageClick(index))
+        onclick: () => index !== selectedImgIndex &&
+          reRender(()=> handleImageClick(index))
       })
   )});
 
@@ -169,7 +170,8 @@ const renderPagesCircleList = () => {
       Object.assign(document.createElement('button'),
       {
         className: sliderPageIndex === i ? 'circle selected-circle' : 'circle',
-        onclick: () => reRender(()=> updateSliderState(-((i) * PAGE_OFFSET), i))
+        onclick: () => sliderPageIndex !== i &&
+          reRender(()=> updateSliderState(-((i) * PAGE_OFFSET), i))
       })
     )
   }

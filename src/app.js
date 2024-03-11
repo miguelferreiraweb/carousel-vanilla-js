@@ -1,16 +1,9 @@
-const IMAGE_DEFAULT_SIZE = 20; // ex: width: 20vw
-const IMAGE_MARGIN_DEFAULT = 2; // ex: margin: 0 2vw
-const ITEMS_PER_PAGE = 3;
-const UNIT_DEFAULT = 'vw';
-const PAGE_OFFSET = (IMAGE_DEFAULT_SIZE * ITEMS_PER_PAGE) + ((IMAGE_MARGIN_DEFAULT * 2 ) * ITEMS_PER_PAGE); // total = 72vw
-const TOTAL_PAGES = 4;
-const SWIPE_DISTANCE_X_DEFAULT = 20;
-
 // State Variables
-let carouselItems = [];
+let carouselItems = null;
+let totalPages = null;
 let selectedImgIndex = null;
-let pageIndex = 0;
-let xValue = 0;
+let sliderPageIndex = 0;
+let containerXvalue = 0;
 let swipeStartX = 0;
 let swipeEndX = 0;
 
@@ -18,7 +11,7 @@ let swipeEndX = 0;
 const leftButton = document.querySelector('.left-button');
 const rightButton = document.querySelector('.right-button');
 const imagesListDiv = document.getElementById('images-list-content');
-const selectedImgDiv = document.getElementById('selected-img');
+const selectedImgTitle = document.getElementById('selected-img-title');
 const pagesListContainer = document.getElementById('pages-list-container');
 
 // Sets the configurable styles for container and slider images.
@@ -30,21 +23,43 @@ const applySliderConfigurableStyles = () =>{
   sliderImages.forEach((imgElement) => {
     imgElement.style.width = `${IMAGE_DEFAULT_SIZE}${UNIT_DEFAULT}`;
     imgElement.style.height = `${IMAGE_DEFAULT_SIZE}${UNIT_DEFAULT}`;
-    imgElement.style.margin = `0 ${IMAGE_MARGIN_DEFAULT}${UNIT_DEFAULT}`;
+    if(INCLUDE_MARGINS_IN_OFFSET){
+      imgElement.style.margin = `0 ${IMAGE_MARGIN_DEFAULT}${UNIT_DEFAULT}`;
+    }
+
   });
 }
 
-const render = async () => {
-  await getCarouselItems();
+const render = () => {
+  calculateTotalPagesAndCarouselItems();
   renderCarouselImagesList();
   renderPagesCircleList();
   updateDirectionButtonsState();
 }
 
+// A simple wrapper function to render and avoid having multiple functions calling
+// the same render method. Takes the callbackFn to be executed before and N
+// arguments of the callbackFn.
+const reRender = (callback, ...args) => {
+  callback(...args);
+  render();
+}
+
+// Calculates the total pages and carousel items based on ITEMS_PER_PAGE value.
+// The carouselItems result is based on if the length of carouselImages.items is
+// (or not) a multiple of ITEMS_PER_PAGE.
+const calculateTotalPagesAndCarouselItems = () => {
+  if(!totalPages && !carouselItems){
+    carouselItems = carouselImages.items.length % ITEMS_PER_PAGE === 0 ?
+      carouselImages.items : carouselImages.items.slice(0, -1);
+    totalPages = Math.floor(carouselItems.length / ITEMS_PER_PAGE);
+  }
+}
+
 // Runs when the DOM is fully loaded (similar to useEffect or componentDidMount in React).
 document.addEventListener('DOMContentLoaded',() => {
-  leftButton.addEventListener('click',()=> reRender(render, handleLeftButtonClick));
-  rightButton.addEventListener('click', ()=> reRender(render, handleRightButtonClick));
+  leftButton.addEventListener('click',()=> reRender(handleLeftButtonClick));
+  rightButton.addEventListener('click', ()=> reRender(handleRightButtonClick));
 
   // Swipe events (Desktop and Mobile)
   imagesListDiv.addEventListener('mousedown', handleSwipeStart);
@@ -54,11 +69,11 @@ document.addEventListener('DOMContentLoaded',() => {
 
   document.addEventListener('keydown', (e)=> {
     if (e.key === 'ArrowLeft') {
-      reRender(render, handleLeftButtonClick);
+      reRender(handleLeftButtonClick);
     }
 
     if(e.key === 'ArrowRight'){
-      reRender(render, handleRightButtonClick);
+      reRender(handleRightButtonClick);
     }
   });
 });
@@ -81,60 +96,49 @@ const handleSwipeEnd = (e) =>  {
   handleSwipe();
 }
 
-function handleSwipe() {
+const handleSwipe = () =>  {
   const currentSwipeDistanceX = swipeEndX - swipeStartX;
 
-  if (currentSwipeDistanceX > SWIPE_DISTANCE_X_DEFAULT) {
-    reRender(render, handleLeftButtonClick);
+  if (currentSwipeDistanceX > SWIPE_MIN_DISTANCE_X) {
+    reRender(handleLeftButtonClick);
   }
 
-  if (currentSwipeDistanceX < -SWIPE_DISTANCE_X_DEFAULT) {
-    reRender(render, handleRightButtonClick);
+  if (currentSwipeDistanceX < -SWIPE_MIN_DISTANCE_X) {
+    reRender(handleRightButtonClick);
   }
 
   swipeStartX = 0;
   swipeEndX = 0;
 }
 
-const getCarouselItems = async () => {
-  try{
-    if(!carouselItems.length){
-      const response = await fetch('./resources/carouselItems.json');
-      carouselItems = (await response.json())?.items ?? [];
-    }
-  } catch {
-    console.log('Error attempting to get file: carouselItems.json');
-  }
-};
-
-const updateSliderState = (updatedXValue, updatedPageIndex) => {
-  xValue = updatedXValue;
-  pageIndex = updatedPageIndex;
-  imagesListDiv.style.transform = `translateX(${xValue}${UNIT_DEFAULT})`;
-  selectedImgDiv.innerHTML = '';
+const updateSliderState = (updatedContainerXvalue, updatedSliderPageIndex) => {
+  containerXvalue = updatedContainerXvalue;
+  sliderPageIndex = updatedSliderPageIndex;
+  imagesListDiv.style.transform = `translateX(${containerXvalue}${UNIT_DEFAULT})`;
+  selectedImgTitle.innerHTML = '';
   selectedImgIndex = null;
 }
 
 const updateDirectionButtonsState = () => {
   // toggle js function -> adds or removes class based on provided condition.
-  leftButton.classList.toggle('disabled-button', pageIndex === 0);
-  rightButton.classList.toggle('disabled-button', pageIndex === TOTAL_PAGES - 1);
+  leftButton.classList.toggle('disabled-button', sliderPageIndex === 0);
+  rightButton.classList.toggle('disabled-button', sliderPageIndex === totalPages - 1);
 }
 
 const handleImageClick = (updatedSelectedImgIndex) => {
   selectedImgIndex = updatedSelectedImgIndex;
-  selectedImgDiv.innerHTML = carouselItems[selectedImgIndex].name ?? '';
+  selectedImgTitle.innerHTML = carouselItems[selectedImgIndex].name ?? '';
 }
 
 const handleLeftButtonClick = () => {
-  if(pageIndex !== 0){
-    updateSliderState(-((pageIndex-1) * PAGE_OFFSET), pageIndex - 1);
+  if(sliderPageIndex !== 0){
+    updateSliderState(-((sliderPageIndex-1) * PAGE_OFFSET), sliderPageIndex - 1);
   }
 }
 
 const handleRightButtonClick = () => {
-  if(pageIndex !== TOTAL_PAGES - 1){
-    updateSliderState(-((pageIndex+1) * PAGE_OFFSET), pageIndex + 1);
+  if(sliderPageIndex !== totalPages - 1){
+    updateSliderState(-((sliderPageIndex+1) * PAGE_OFFSET), sliderPageIndex + 1);
   }
 }
 
@@ -147,10 +151,10 @@ const renderCarouselImagesList = () => {
     imagesListDiv.appendChild(
       Object.assign(document.createElement('img'),
       {
-        src: `./resources/images/${item.file}.jpg`,
+        src: !LOAD_IMAGES_FROM_URL ? `./resources/images/${item.file}.jpg` : item.url,
         alt: `${item.name} Image`,
         className: index === selectedImgIndex ? 'slider-img selected-img' : 'slider-img',
-        onclick: () => reRender(render, ()=> handleImageClick(index))
+        onclick: () => reRender(()=> handleImageClick(index))
       })
   )});
 
@@ -160,18 +164,15 @@ const renderCarouselImagesList = () => {
 const renderPagesCircleList = () => {
   pagesListContainer.innerHTML = '';
 
-  for (let i = 0; i <= TOTAL_PAGES - 1; i++) {
+  for (let i = 0; i <= totalPages - 1; i++) {
     pagesListContainer.appendChild(
       Object.assign(document.createElement('button'),
       {
-        className: pageIndex === i ? 'circle selected-circle' : 'circle',
-        onclick: () => reRender(render, ()=> updateSliderState(-((i) * PAGE_OFFSET), i))
+        className: sliderPageIndex === i ? 'circle selected-circle' : 'circle',
+        onclick: () => reRender(()=> updateSliderState(-((i) * PAGE_OFFSET), i))
       })
     )
   }
 }
 
-// IIFE added to avoid error "await is only valid at the top level bodies of modules"
-(async () => {
-  await render();
-})();
+render();

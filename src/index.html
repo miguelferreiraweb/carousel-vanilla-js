@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Miguel Ferreira">
-  <title>Carousel in Vanilla JS</title>
+  <title>Responsive Carousel in Vanilla JS</title>
   <link rel="stylesheet" href="./styles/styles.css">
 </head>
 <body>
   <main class="main-content">
-    <div class="main-content title" id="selected-img"></div>
+    <div class="main-content title" id="selected-img-title"></div>
     <section class="carousel-container">
       <button class="left-button">&#x2794;</button>
       <div class="image-list-container">
@@ -19,7 +19,8 @@
       <p class="pages-container" id="pages-list-container"></p>
     </section>
   </main>
-  <script src="./utils/utils.js"></script>
+  <script src="./utils/constants.js"></script>
+  <script src="./resources/carouselImages.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -38,6 +38,7 @@ html, body {
       .slider-img {
         /* width and height are set dynamically in JS for better consistency */
         -webkit-user-drag: none;
+        user-select: none;
         cursor: grab;
         /* margin is set dynamically in JS for better consistency */
       }

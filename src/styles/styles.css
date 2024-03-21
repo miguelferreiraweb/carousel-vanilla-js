@@ -32,6 +32,7 @@ html, body {
     .image-list-container {
       overflow-x: hidden;
       cursor: grab;
+      display: grid;
       /* width is set dynamically in JS for better consistency */
 
       #images-list-content {

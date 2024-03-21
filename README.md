@@ -15,6 +15,9 @@ A fully responsive images carousel/slider built in Vanilla JS, HTML and CSS  (de
 Simply open the index.html under /src directory. For development purposes, any live server extension
 can provide you with live page reload support (ex: [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) on Vscode).
 
+## App Urls
+
+[https://carousel-vanilla-js-six.vercel.app/](https://carousel-vanilla-js-six.vercel.app/)
 
 ## Screenshots Preview
 

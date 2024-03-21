@@ -3,8 +3,10 @@ html, body {
   margin: 0;
   overflow: hidden; /* scroll disabled because of the touch events. */
   color: white;
-  -webkit-text-size-adjust: none;
-	touch-action: manipulation;
+  -webkit-text-size-adjust: none; /* disable page zoom */
+	touch-action: manipulation; /* disable page zoom */
+  user-select: none; /* disable text selection */
+  -webkit-user-select: none; /* disable text selection */
 }
 
 .main-content {

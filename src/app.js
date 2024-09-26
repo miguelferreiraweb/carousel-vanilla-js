@@ -153,6 +153,7 @@ const renderCarouselImagesList = () => {
       {
         src: !LOAD_IMAGES_FROM_URL ? `./resources/images/${item.file}.jpg` : item.url,
         alt: `${item.name} Image`,
+        draggable: false,
         className: index === selectedImgIndex ? 'slider-img selected-img' : 'slider-img',
         onclick: () => index !== selectedImgIndex &&
           reRender(()=> handleImageClick(index))

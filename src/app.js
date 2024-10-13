@@ -8,25 +8,24 @@ let swipeStartX = 0;
 let swipeEndX = 0;
 
 // DOM Elements
-const leftButton = document.querySelector('.left-button');
-const rightButton = document.querySelector('.right-button');
-const imagesListDiv = document.getElementById('images-list-content');
-const selectedImgTitle = document.getElementById('selected-img-title');
-const pagesListContainer = document.getElementById('pages-list-container');
+const leftButton = document.getElementById(LEFT_BUTTON_ID);
+const rightButton = document.getElementById(RIGHT_BUTTON_ID);
+const imagesListDiv = document.getElementById(SLIDER_INNER_CONTAINER_ID);
+const selectedImgTitle = document.getElementById(SELECTED_IMG_TITLE_ID);
+const paginationContainer = document.getElementById(PAGINATION_CONTAINER_ID);
 
 // Sets the configurable styles for container and slider images.
 const applySliderConfigurableStyles = () =>{
-  const imageListContainerDiv = document.querySelector('.image-list-container');
+  const imageListContainerDiv = document.getElementById(SLIDER_OUTER_CONTAINER_ID);
   const sliderImages = document.querySelectorAll('.slider-img');
 
-  imageListContainerDiv.style.width = `${PAGE_OFFSET}${UNIT_DEFAULT}`;
+  imageListContainerDiv.style.width = `${getPageOffset()}${UNIT_DEFAULT}`;
   sliderImages.forEach((imgElement) => {
-    imgElement.style.width = `${IMAGE_DEFAULT_SIZE}${UNIT_DEFAULT}`;
-    imgElement.style.height = `${IMAGE_DEFAULT_SIZE}${UNIT_DEFAULT}`;
+    imgElement.style.width = `${getImageDefaultSize()}${UNIT_DEFAULT}`;
+    imgElement.style.height = `${getImageDefaultSize()}${UNIT_DEFAULT}`;
     if(INCLUDE_MARGINS_IN_OFFSET){
       imgElement.style.margin = `0 ${IMAGE_MARGIN_DEFAULT}${UNIT_DEFAULT}`;
     }
-
   });
 }
 
@@ -45,19 +44,21 @@ const reRender = (callback, ...args) => {
   render();
 }
 
-// Calculates the total pages and carousel items based on ITEMS_PER_PAGE value.
+// Calculates the total pages and carousel items based on itemsPerPage value.
 // The carouselItems result is based on if the length of carouselImages.items is
-// (or not) a multiple of ITEMS_PER_PAGE.
+// (or not) a multiple of itemsPerPage.
 const calculateTotalPagesAndCarouselItems = () => {
-  if(!totalPages && !carouselItems){
-    carouselItems = carouselImages.items.length % ITEMS_PER_PAGE === 0 ?
+  const itemsPerPage = getItemsPerPage();
+    carouselItems = carouselImages.items.length % itemsPerPage === 0 ?
       carouselImages.items : carouselImages.items.slice(0, -1);
-    totalPages = Math.floor(carouselItems.length / ITEMS_PER_PAGE);
-  }
+    totalPages = Math.floor(carouselItems.length / itemsPerPage);
 }
+
+window.addEventListener('resize', render);
 
 // Runs when the DOM is fully loaded (similar to useEffect or componentDidMount in React).
 document.addEventListener('DOMContentLoaded',() => {
+
   leftButton.addEventListener('click',()=> reRender(handleLeftButtonClick));
   rightButton.addEventListener('click', ()=> reRender(handleRightButtonClick));
 
@@ -132,13 +133,13 @@ const handleImageClick = (updatedSelectedImgIndex) => {
 
 const handleLeftButtonClick = () => {
   if(sliderPageIndex !== 0){
-    updateSliderState(-((sliderPageIndex-1) * PAGE_OFFSET), sliderPageIndex - 1);
+    updateSliderState(-((sliderPageIndex-1) * getPageOffset()), sliderPageIndex - 1);
   }
 }
 
 const handleRightButtonClick = () => {
   if(sliderPageIndex !== totalPages - 1){
-    updateSliderState(-((sliderPageIndex+1) * PAGE_OFFSET), sliderPageIndex + 1);
+    updateSliderState(-((sliderPageIndex+1) * getPageOffset()), sliderPageIndex + 1);
   }
 }
 
@@ -164,15 +165,16 @@ const renderCarouselImagesList = () => {
 }
 
 const renderPagesCircleList = () => {
-  pagesListContainer.innerHTML = '';
+  paginationContainer.innerHTML = '';
 
   for (let i = 0; i <= totalPages - 1; i++) {
-    pagesListContainer.appendChild(
+    paginationContainer.appendChild(
       Object.assign(document.createElement('button'),
       {
         className: sliderPageIndex === i ? 'circle selected-circle' : 'circle',
+        ariaLabel: `Go to page ${i+1}`,
         onclick: () => sliderPageIndex !== i &&
-          reRender(()=> updateSliderState(-((i) * PAGE_OFFSET), i))
+          reRender(()=> updateSliderState(-((i) * getPageOffset()), i))
       })
     )
   }

@@ -1,10 +1,17 @@
-const IMAGE_DEFAULT_SIZE = 15; // ex: width: 15vw
-const IMAGE_MARGIN_DEFAULT = 2; // ex: margin: 0 2vw
-const ITEMS_PER_PAGE = 4;
+const IMAGE_DEFAULT_SIZE_DESKTOP = 18;
+const IMAGE_DEFAULT_SIZE_MOBILE = 22;
+const IMAGE_MARGIN_DEFAULT = 2;
+const ITEMS_PER_PAGE_DESKTOP = 4;
+const ITEMS_PER_PAGE_MOBILE = 3;
 const UNIT_DEFAULT = 'vw';
 const SWIPE_MIN_DISTANCE_X = 20;
 const LOAD_IMAGES_FROM_URL = false;
 const INCLUDE_MARGINS_IN_OFFSET = true;
-const PAGE_OFFSET = INCLUDE_MARGINS_IN_OFFSET ?
-  (IMAGE_DEFAULT_SIZE * ITEMS_PER_PAGE) + ((IMAGE_MARGIN_DEFAULT * 2 ) * ITEMS_PER_PAGE) :
-  (IMAGE_DEFAULT_SIZE * ITEMS_PER_PAGE);
+
+// DOM element IDs
+const LEFT_BUTTON_ID = 'left-button';
+const RIGHT_BUTTON_ID = 'right-button'
+const SLIDER_OUTER_CONTAINER_ID = 'slider-outer-container';
+const SLIDER_INNER_CONTAINER_ID = 'slider-inner-container';
+const PAGINATION_CONTAINER_ID = 'pagination-container';
+const SELECTED_IMG_TITLE_ID = 'selected-img-title';

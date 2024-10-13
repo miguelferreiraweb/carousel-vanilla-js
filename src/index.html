@@ -4,22 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <meta name="author" content="Miguel Ferreira">
+  <meta name="description" content="Responsive images carousel built in Vanilla JS, HTML and CSS
+  (dependency free). Features: Image and page selection, Keyboard navigation, Swipe on desktop & mobile.">
   <title>Responsive Carousel in Vanilla JS</title>
   <link rel="stylesheet" href="./styles/styles.css">
 </head>
 <body>
-  <main class="main-content">
-    <div class="main-content title" id="selected-img-title"></div>
+  <main class="page-container">
+    <div class="page-container title" id="selected-img-title"></div>
     <section class="carousel-container">
-      <button class="left-button">&#x2794;</button>
-      <div class="image-list-container">
-        <div id="images-list-content"></div>
+      <button
+        class="left-button"
+        id="left-button"
+        aria-label="Navigate to left">
+        &#x2794;
+      </button>
+      <div class="slider-outer-container" id="slider-outer-container">
+        <div class="slider-inner-container" id="slider-inner-container"></div>
       </div>
-      <button class="left-button right-button">&#x2794;</button>
-      <p class="pages-container" id="pages-list-container"></p>
+      <button
+        class="left-button right-button"
+        id="right-button"
+        aria-label="Navigate to right">
+        &#x2794;
+      </button>
+      <p
+        class="pagination-container"
+        id="pagination-container">
+      </p>
     </section>
   </main>
   <script src="./utils/constants.js"></script>
+  <script src="./utils/functions.js"></script>
   <script src="./resources/carouselImages.js"></script>
   <script src="app.js"></script>
 </body>

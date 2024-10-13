@@ -2,20 +2,20 @@ html, body {
   height: 100%;
   margin: 0;
   overflow: hidden; /* scroll disabled because of the touch events. */
-  color: white;
+  color: #ffffff;
   -webkit-text-size-adjust: none; /* disable page zoom */
 	touch-action: manipulation; /* disable page zoom */
   user-select: none; /* disable text selection */
   -webkit-user-select: none; /* disable text selection */
 }
 
-.main-content {
+.page-container {
   height: 100%;
   width: 100%;
   display: grid;
   justify-content: center;
   align-items: center;
-  background-color: black;
+  background-color: #000000;
 
   .title {
     align-items: end;
@@ -28,39 +28,20 @@ html, body {
     grid-template-columns: min-content auto min-content;
     align-self: baseline;
 
-    .image-list-container {
-      overflow-x: hidden;
-      cursor: grab;
-      display: grid;
-      /* width is set dynamically in JS for better consistency */
-
-      #images-list-content {
-        display: flex;
-        transition: transform 0.6s ease;
-      }
-
-      .slider-img {
-        /* width and height are set dynamically in JS for better consistency */
-        user-select: none;
-        cursor: grab;
-        /* margin is set dynamically in JS for better consistency */
-      }
-
-      .selected-img {
-        border: 1px solid white;
-      }
-    }
-
     .left-button {
-      background-color: white;
-      color: black;
+      background-color: #ffffff;
+      color: #000000;
       transform: scaleX(-1);
       height: 50%;
       align-self: center;
       cursor: pointer;
       border-radius: 10px;
-      border: 1px solid deepskyblue;
-      box-shadow: 0 0 0 1px deepskyblue;
+      border: 1px solid #00bfff;
+      box-shadow: 0 0 0 1px #00bfff;
+    }
+
+    .right-button {
+      transform: unset;
     }
 
     .disabled-button {
@@ -68,29 +49,46 @@ html, body {
       pointer-events: none;
     }
 
-    .right-button {
-      transform: unset;
+    .slider-outer-container {
+      overflow-x: hidden;
+      cursor: grab;
+      /* width is set dynamically in JS for better consistency */
+
+      .slider-inner-container {
+        display: flex;
+        transition: transform 0.6s ease;
+
+        .slider-img {
+          /* width and height are set dynamically in JS for better consistency */
+          user-select: none;
+          cursor: grab;
+          /* margin is set dynamically in JS for better consistency */
+        }
+
+        .selected-img {
+          border: 1px solid #ffffff;
+        }
+      }
     }
 
-    .pages-container {
+    .pagination-container {
       grid-column: 2;
       justify-self: center;
-    }
 
-    .circle {
-      height: 15px;
-      width: 15px;
-      background-color: #bbb;
-      border-radius: 50%;
-      margin-left: 5px;
-      padding: unset;
-      border: unset;
-      cursor: pointer;
-    }
+      .circle {
+        height: 15px;
+        width: 15px;
+        background-color: #bbbbbb;
+        border-radius: 50%;
+        margin-left: 5px;
+        padding: unset;
+        border: unset;
+        cursor: pointer;
+      }
 
-    .selected-circle {
-      background-color: deepskyblue;
+      .selected-circle {
+        background-color: #00bfff;
+      }
     }
-
   }
 }

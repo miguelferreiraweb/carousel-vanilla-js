@@ -52,6 +52,7 @@ html, body {
     .slider-outer-container {
       overflow-x: hidden;
       cursor: grab;
+      display: grid; /* required to avoid swipe bug on mobile */
       /* width is set dynamically in JS for better consistency */
 
       .slider-inner-container {

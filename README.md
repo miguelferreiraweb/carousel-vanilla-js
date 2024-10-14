@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/miguelferreiraweb/carousel-vanilla-js/workflows/Deploy/badge.svg)](https://github.com/miguelferreiraweb/carousel-vanilla-js/actions)
+
 ## Live App Urls
 
 [https://carousel-vanilla-js-six.vercel.app/](https://carousel-vanilla-js-six.vercel.app/)
